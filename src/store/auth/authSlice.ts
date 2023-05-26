@@ -28,7 +28,7 @@ export const authSlice = createSlice({
             state.status = 'not-authenticated';
             state.user = {};
             localStorage.removeItem('_u_');
-            state.errorMsj = payload.Estado;
+            state.errorMsj = payload?.Estado;
         },
     }
 });

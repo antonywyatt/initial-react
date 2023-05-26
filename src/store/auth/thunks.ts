@@ -1,5 +1,6 @@
-import authApi from "../../api/authApi"
 import { checkingAuthentication, login, logout, verifyAuth } from "."
+import authApi from "../../api/authApi"
+import homeApi from "../../api/homeApi"
 
 interface User{
     user: string,
@@ -16,14 +17,22 @@ export const onVerifyAuth:any = ( ) => {
     return async ( dispatch:any ) => {
         dispatch( checkingAuthentication() );
 
-        const user = localStorage.getItem('_u_');
-        if(user == null){
-            dispatch( logout({ Estado: 'Expired session!' }) )
-        }else{
+        const {data} = await homeApi.get('/autenticado')
+
+        if(data[0]?.autenticado == '1'){
             const decrypt = atob(localStorage.getItem('_u_') || '');
             const user = JSON.parse(decrypt);
             dispatch( verifyAuth({ user }))
+        }else{
+            dispatch( logout({ Estado: 'Expired session!' }) )
         }
+    }
+}
+
+export const onLogout:any = ( ) => {
+    return async ( dispatch:any ) => {
+        dispatch( checkingAuthentication() );
+        dispatch( logout({Estado: 'Logout!'}));
     }
 }
 

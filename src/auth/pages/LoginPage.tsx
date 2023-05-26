@@ -28,12 +28,14 @@ export const LoginPage = () => {
             <form onSubmit={onSubmit}> 
             <h1>Login Page</h1>
             <input
+                required
                 name="user" 
                 value={user}
                 onChange={onInputChange}
                 type="text" />
             <input
-                name="password" 
+                required 
+                name="password"
                 value={password}
                 onChange={onInputChange} 
                 type="password" />
