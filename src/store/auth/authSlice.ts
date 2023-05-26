@@ -4,22 +4,39 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState : {
         status: 'not-authenticated', //'checking' | 'not-authenticated' | 'authenticated';
-        user: {}
+        user: {},
+        errorMsj: ''
     },
     reducers:{
-        login: (state, {payload})=> {
-            state.status = 'checking';
+        login: (state, { payload })=> {
+            state.status = 'authenticated';
             state.user = payload;
-        },
-        logout: (state)=> {
-            state.status = 'not-authenticated';
-            state.user = {};
+            state.errorMsj = '';
+            //save user in localstorage
+            const encrypt = btoa(JSON.stringify(payload));
+            localStorage.setItem('_u_', encrypt)
+
         },
         checkingAuthentication: (state)=> {
             state.status = 'checking';
-        }
+        },
+        verifyAuth: (state, { payload })=> {
+            state.status = 'authenticated';
+            state.user = payload.user;
+        },
+        logout: (state, { payload })=> {
+            state.status = 'not-authenticated';
+            state.user = {};
+            localStorage.removeItem('_u_');
+            state.errorMsj = payload.Estado;
+        },
     }
 });
 
 
-export const { login, logout, checkingAuthentication } = authSlice.actions;
+export const { 
+    login, 
+    logout, 
+    checkingAuthentication, 
+    verifyAuth 
+} = authSlice.actions;
